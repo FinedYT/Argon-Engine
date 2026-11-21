@@ -23,7 +23,7 @@ cargo run
 ## Roadmap
 - [x] Window creation and event loop (`winit`)
 - [x] GPU context initialization and surface clearing (`wgpu`)
-- [ ] Basic shaders and render pipeline (WGSL)
+- [x] Basic shaders and render pipeline (WGSL)
 - [ ] Vertex and index buffers
 - [ ] 3D perspective camera and transforms (`glam`)
 - [ ] Depth buffer (Z-buffer)

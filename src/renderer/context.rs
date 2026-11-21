@@ -8,6 +8,7 @@ pub struct RenderContext {
     pub queue: wgpu::Queue,
     pub config: wgpu::SurfaceConfiguration,
     pub size: PhysicalSize<u32>,
+    pub render_pipeline: wgpu::RenderPipeline,
 }
 
 impl RenderContext {
@@ -58,12 +59,15 @@ impl RenderContext {
 
         surface.configure(&device, &config);
 
+        let render_pipeline = super::pipeline::create_render_pipeline(&device, &config);
+
         Self {
             surface,
             device,
             queue,
             config,
             size,
+            render_pipeline,
         }
     }
 
@@ -100,7 +104,7 @@ impl RenderContext {
             });
 
         {
-            let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("Clear Render Pass"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                     view: &view,
@@ -121,6 +125,9 @@ impl RenderContext {
                 timestamp_writes: None,
                 multiview_mask: None,
             });
+
+            render_pass.set_pipeline(&self.render_pipeline);
+            render_pass.draw(0..3, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
